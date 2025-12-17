@@ -12,6 +12,7 @@ __pycache__/
 
 # Model checkpoints
 *.ckpt
+!model_checkpoint.ckpt
 checkpoints/
 checkpoint/
 
