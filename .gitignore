@@ -23,12 +23,6 @@ wandb/
 test.ipynb
 *.ipynb_checkpoints
 
-# Test images
-test_images/
-*.jpg
-*.jpeg
-*.png
-!README.md
 
 # IDE
 .vscode/
