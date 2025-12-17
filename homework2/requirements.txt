@@ -1,0 +1,9 @@
+bentoml
+torch
+pytorch-lightning
+numpy
+streamlit
+requests
+pillow
+pandas
+altair
