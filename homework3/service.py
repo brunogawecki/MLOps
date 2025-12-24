@@ -1,6 +1,5 @@
 import bentoml
 import torch
-import numpy as np
 from transformers import AutoImageProcessor, AutoModelForImageClassification, AutoConfig
 from PIL import Image
 
@@ -29,36 +28,16 @@ class ResNet50Service:
         print('ResNet-50 model loaded successfully')
 
     @bentoml.api
-    def predict(self, image: np.ndarray) -> dict:
-        # Convert input to numpy array with correct dtype
-        # JSON deserializes integers as int64, but PIL needs uint8
-        if isinstance(image, list):
-            image = np.array(image, dtype=np.uint8)
-        elif isinstance(image, np.ndarray):
-            # Ensure uint8 dtype (handle int64 from JSON)
-            if image.dtype != np.uint8:
-                # Clip values to 0-255 range and convert to uint8
-                image = np.clip(image, 0, 255).astype(np.uint8)
-        else:
-            image = np.array(image, dtype=np.uint8)
-        
-        # Ensure correct shape: (height, width, channels) or (height, width)
-        if len(image.shape) == 3 and image.shape[2] == 1:
-            # Handle grayscale with channel dimension
-            image = image.squeeze(axis=2)
-        elif len(image.shape) == 1:
-            # If it's a flat array, we can't determine shape - this shouldn't happen
-            raise ValueError(f"Unexpected image shape: {image.shape}. Expected 2D or 3D array.")
-        
-        # Convert to PIL Image
-        pil_image = Image.fromarray(image)
+    def predict(self, image_path: str) -> dict:
+        # Load image from path
+        image = Image.open(image_path)
         
         # Ensure RGB format
-        if pil_image.mode != 'RGB':
-            pil_image = pil_image.convert('RGB')
+        if image.mode != 'RGB':
+            image = image.convert('RGB')
         
         # Preprocess image
-        inputs = self.processor(pil_image, return_tensors='pt')
+        inputs = self.processor(image, return_tensors='pt')
 
         # Run inference
         with torch.no_grad():

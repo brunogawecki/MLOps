@@ -1,6 +1,4 @@
 import requests
-import numpy as np
-from PIL import Image
 from pathlib import Path
 
 def main():
@@ -8,23 +6,12 @@ def main():
     image_path = script_dir / "cow.jpg"
 
     try:
-        # Load image and convert to numpy array
-        pil_image = Image.open(image_path)
-        
-        # Convert to RGB if needed
-        if pil_image.mode != "RGB":
-            pil_image = pil_image.convert("RGB")
-        
-        # Convert to numpy array (shape: height, width, channels)
-        image_array = np.array(pil_image, dtype=np.uint8)
-        
-        # Convert to list for JSON serialization
-        image_list = image_array.tolist()
-        
-        # Send as JSON
+        # Send image path as JSON
+        # Use absolute path so the service can find the file
+        # Convert Path object to string for JSON serialization
         response = requests.post(
             "http://localhost:3000/predict",
-            json={"image": image_list}
+            json={"image_path": str(image_path.absolute())}
         )
         print(response.json())
     except requests.exceptions.ConnectionError:
