@@ -21,7 +21,7 @@ def main():
     if uploaded_file is not None:
         image = Image.open(uploaded_file)
         with col2:
-            st.image(image, caption='Uploaded Image', use_container_width=True)
+            st.image(image, caption='Uploaded Image', width='stretch')
 
         image = image.resize((28, 28))
         image = PIL.ImageOps.invert(image.convert('RGB'))
@@ -49,7 +49,7 @@ def main():
                 # Combine bar chart and text labels
                 chart = base.mark_bar() + base.mark_text(align='left', dx=2)
                 
-                st.altair_chart(chart, use_container_width=True)
+                st.altair_chart(chart, width='stretch')
             else:
                 st.write(f"Error: {response.status_code}")
                 st.write(response.text)

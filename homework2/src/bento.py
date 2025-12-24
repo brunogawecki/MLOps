@@ -6,7 +6,7 @@ from pathlib import Path
 from model import CNNModel, FashionMNISTLightningModule
 
 def main():
-    model_path = Path("model_checkpoint.ckpt")
+    model_path = Path("../model_checkpoint.ckpt")
     lightning_model = FashionMNISTLightningModule.load_from_checkpoint(model_path)
     lightning_model.eval()
     print(f'Loaded model from: {model_path}')
