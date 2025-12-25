@@ -1,4 +1,0 @@
-bentoml
-torch
-transformers
-pillow
