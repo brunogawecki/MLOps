@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 *.so
 .Python
+.python-version
 
 # Environment variables
 venv/
@@ -25,9 +26,9 @@ wandb/
 test.ipynb
 *.ipynb_checkpoints
 
-
 # IDE
 .vscode/
+cursor/
 .idea/
 *.swp
 *.swo
@@ -39,3 +40,6 @@ Thumbs.db
 
 # BentoML
 bentoml/
+
+test/
+.gitignore

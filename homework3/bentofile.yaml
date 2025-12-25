@@ -1,0 +1,14 @@
+service: "service.py:ResNet50Service"
+
+include:
+  - "*.py"
+
+models:
+ - resnet-50:latest
+
+python:
+  packages:
+    - torch
+    - pillow
+    - transformers
+    - requests
