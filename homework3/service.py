@@ -2,6 +2,8 @@ import bentoml
 import torch
 from transformers import AutoImageProcessor, AutoModelForImageClassification, AutoConfig
 from PIL import Image
+import requests
+from io import BytesIO
 
 @bentoml.service(
     name='resnet-50-classifier',
@@ -28,9 +30,19 @@ class ResNet50Service:
         print('ResNet-50 model loaded successfully')
 
     @bentoml.api
-    def predict(self, image_path: str) -> dict:
-        # Load image from path
-        image = Image.open(image_path)
+    def predict(self, image_url: str) -> dict:
+        # Download image from URL
+        try:
+            response = requests.get(image_url, timeout=30)
+            response.raise_for_status()  # Raise an exception for bad status codes
+        except requests.exceptions.RequestException as e:
+            raise ValueError(f"Failed to download image from URL: {image_url}. Error: {str(e)}")
+        
+        # Load image from bytes
+        try:
+            image = Image.open(BytesIO(response.content))
+        except Exception as e:
+            raise ValueError(f"Failed to open image from URL: {image_url}. Error: {str(e)}")
         
         # Ensure RGB format
         if image.mode != 'RGB':
