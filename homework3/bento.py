@@ -1,3 +1,7 @@
+"""
+This script saves the model and processor to BentoML.
+"""
+
 import bentoml
 import torch
 from transformers import AutoImageProcessor, AutoModelForImageClassification
