@@ -28,7 +28,6 @@ test.ipynb
 
 # IDE
 .vscode/
-cursor/
 .idea/
 *.swp
 *.swo
@@ -43,3 +42,5 @@ bentoml/
 
 test/
 .gitignore
+.cursor/
+*.pem
