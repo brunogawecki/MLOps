@@ -1,0 +1,6 @@
+bentoml==1.4.25
+torch
+pillow
+transformers
+requests
+python-dotenv
