@@ -39,7 +39,7 @@ def predict(image_path: Path, model, image_processor):
 
 if __name__ == "__main__":
     model, image_processor = load_model()
-    results = predict(Path("cow.jpg"), model, image_processor)
+    results = predict("test_images/cow.jpg", model, image_processor)
     top5_preds = results[:5]
     print(f'')
     for pred in top5_preds:
