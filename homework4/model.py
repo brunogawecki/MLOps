@@ -3,7 +3,7 @@ from transformers import AutoModelForImageClassification, AutoImageProcessor
 from pathlib import Path
 from PIL import Image
 
-MODEL_PATH = Path("MobileNetV2_model")
+MODEL_PATH = Path("mobilenetv2")
 
 def load_model():
     image_processor = AutoImageProcessor.from_pretrained(MODEL_PATH)
