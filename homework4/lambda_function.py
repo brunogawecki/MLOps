@@ -1,4 +1,5 @@
 import json
+from webbrowser import get
 import boto3
 from pathlib import Path
 from model import load_model, predict
@@ -9,7 +10,7 @@ s3 = boto3.client('s3')
 model = None
 image_processor = None
 
-def load_model():
+def get_model():
     """Load model once per container"""
     global model, image_processor
     if model is None or image_processor is None:
@@ -28,7 +29,7 @@ def lambda_handler(event, context):
             response = s3.get_object(Bucket=bucket_name, Key=object_key)
             image_bytes = response['Body'].read()
 
-            model, image_processor = load_model()
+            model, image_processor = get_model()
 
             results = predict(image_bytes, model, image_processor)
 

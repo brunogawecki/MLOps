@@ -3,9 +3,9 @@ from transformers import AutoModelForImageClassification, AutoImageProcessor
 from pathlib import Path
 from PIL import Image
 from io import BytesIO
-import pandas as pd
+import os
 
-MODEL_PATH = Path("mobilenetv2")
+MODEL_PATH = Path(os.environ.get('MODEL_PATH', '/opt/ml/model/mobilenetv2'))
 
 def load_model():
     image_processor = AutoImageProcessor.from_pretrained(MODEL_PATH)
@@ -38,7 +38,3 @@ def predict(image_bytes: bytes, model, image_processor, top_k=3):
         })
     
     return results
-
-def save_results_to_csv(results: list, filename: str = "results.csv"):
-    df = pd.DataFrame(results)
-    df.to_csv(filename, index=False)
