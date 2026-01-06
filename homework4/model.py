@@ -2,6 +2,7 @@ import torch
 from transformers import AutoModelForImageClassification, AutoImageProcessor
 from pathlib import Path
 from PIL import Image
+import pandas as pd
 
 MODEL_PATH = Path("mobilenetv2")
 
@@ -11,7 +12,7 @@ def load_model():
     model.eval()
     return model, image_processor
 
-def predict(image_path: Path, model, image_processor):
+def predict(image_path: Path, model, image_processor, top_k=3):
     image = Image.open(image_path)
     if image.mode != 'RGB':
         image = image.convert('RGB')
@@ -22,12 +23,12 @@ def predict(image_path: Path, model, image_processor):
         outputs = model(**inputs)
         logits = outputs.logits
     
-    # Get top 5 predictions
+    # Get top k predictions
     probabilities = torch.nn.functional.softmax(logits, dim=-1)[0]
-    top5_probs, top5_indices = torch.topk(probabilities, 5)
+    top_k_probs, top_k_indices = torch.topk(probabilities, top_k)
     
     results = []
-    for prob, idx in zip(top5_probs, top5_indices):
+    for prob, idx in zip(top_k_probs, top_k_indices):
         class_id = int(idx.item())
         results.append({
             'class_id': class_id,
@@ -37,10 +38,16 @@ def predict(image_path: Path, model, image_processor):
     
     return results
 
+def save_results_to_csv(results: list, filename: str = "results.csv"):
+    df = pd.DataFrame(results)
+    df.to_csv(filename, index=False)
+
 if __name__ == "__main__":
     model, image_processor = load_model()
     results = predict("test_images/cow.jpg", model, image_processor)
-    top5_preds = results[:5]
-    print(f'')
-    for pred in top5_preds:
+
+    save_results_to_csv(results)
+
+    print(f'PREDICTIONS:')
+    for pred in results:
         print(f"Class ID: {pred['class_id']}, Class Name: {pred['class_name']}, Score: {pred['score']}")
