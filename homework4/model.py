@@ -2,6 +2,7 @@ import torch
 from transformers import AutoModelForImageClassification, AutoImageProcessor
 from pathlib import Path
 from PIL import Image
+from io import BytesIO
 import pandas as pd
 
 MODEL_PATH = Path("mobilenetv2")
@@ -12,8 +13,8 @@ def load_model():
     model.eval()
     return model, image_processor
 
-def predict(image_path: Path, model, image_processor, top_k=3):
-    image = Image.open(image_path)
+def predict(image_bytes: bytes, model, image_processor, top_k=3):
+    image = Image.open(BytesIO(image_bytes))
     if image.mode != 'RGB':
         image = image.convert('RGB')
     
@@ -41,13 +42,3 @@ def predict(image_path: Path, model, image_processor, top_k=3):
 def save_results_to_csv(results: list, filename: str = "results.csv"):
     df = pd.DataFrame(results)
     df.to_csv(filename, index=False)
-
-if __name__ == "__main__":
-    model, image_processor = load_model()
-    results = predict("test_images/cow.jpg", model, image_processor)
-
-    save_results_to_csv(results)
-
-    print(f'PREDICTIONS:')
-    for pred in results:
-        print(f"Class ID: {pred['class_id']}, Class Name: {pred['class_name']}, Score: {pred['score']}")
