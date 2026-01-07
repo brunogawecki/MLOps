@@ -4,3 +4,4 @@ transformers
 requests
 python-dotenv
 boto3
+numpy<2.0.0
