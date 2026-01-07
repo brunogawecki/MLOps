@@ -1,8 +1,8 @@
 import json
-from webbrowser import get
 import boto3
 from pathlib import Path
 from model import load_model, predict
+import traceback
 
 s3 = boto3.client('s3')
 
@@ -34,21 +34,22 @@ def lambda_handler(event, context):
             results = predict(image_bytes, model, image_processor)
 
             # upload results as json to s3
-            results_key = f"results/{Path(object_key).stem}_predictions.csv"
-            s3.put_object(Bucket=bucket_name, Key=results_key, Body=json.dumbps(results).encode('utf-8'), ContentType='application/json')
+            results_key = f"results/{Path(object_key).stem}_predictions.json"
+            s3.put_object(Bucket=bucket_name, Key=results_key, Body=json.dumps(results).encode('utf-8'), ContentType='application/json')
 
             print(f'Results uploaded to {bucket_name}/{results_key}')
 
             return {
                 'statusCode': 200,
                 'body': json.dumps({
-                    'messsage': 'Success',
+                    'message': 'Success',
                     'results' : results_key,
                     'predictions' : results
                 })
             }    
     except Exception as e:
-        print(f'Error: str(e)')
+        print(f'Error: {str(e)}')
+        print(f'Traceback: {traceback.format_exc()}')
         return {
             'statusCode': 500,
             'body': json.dumps({
