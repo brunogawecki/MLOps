@@ -26,6 +26,11 @@ Run the Docker container:
 docker run -d --name resnet -p 3000:3000 brunogawecki/resnet-50-classifier
 ```
 
+or restart container if it already exists:
+```bash
+docker start resnet
+```
+
 ## Running the Client
 
 ```bash
