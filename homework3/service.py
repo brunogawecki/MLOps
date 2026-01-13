@@ -76,7 +76,3 @@ class ResNet50Service:
             'predicted_class_name': results[0]['class_name'],
             'confidence': results[0]['score']
         }
-
-    @bentoml.api
-    def add(self, a: int, b: int) -> int:
-        return a + b
